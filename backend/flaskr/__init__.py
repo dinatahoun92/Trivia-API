@@ -8,7 +8,6 @@ from models import setup_db, Question, Category
 
 QUESTIONS_PER_PAGE = 10
 
-# create and configure the app
 def create_app(test_config=None):
     app = Flask(__name__)
     setup_db(app)
@@ -99,8 +98,8 @@ def create_app(test_config=None):
       try:
           Question.query.get(id).delete()
           return jsonify({
-              'deleted': id,
-              'success': True,
+              'id': id,
+              'success': True
           })
       except:
           abort(422)
@@ -115,6 +114,22 @@ def create_app(test_config=None):
     the form will clear and the question will appear at the end of the last page
     of the questions list in the "List" tab.  
     '''
+    @app.route('/questions', methods=['POST'])
+    def add_question():
+      try:
+        question = request.form.get('question')
+        answer = request.form.get('answer')
+        category = request.form.get('category')
+        difficulty = request.form.get('difficulty')
+        question = Question(question=question, answer=answer, category=category,difficulty=difficulty)
+        question.insert()
+        return jsonify({
+            'success': True
+        })
+      except:
+        abort(422)
+
+     
 
     '''
     @TODO: 
