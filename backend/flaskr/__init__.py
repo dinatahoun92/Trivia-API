@@ -40,7 +40,7 @@ def create_app(test_config=None):
     Create an endpoint to handle GET requests 
     for all available categories.
     '''
-    @app.route("/categories", methods=["GET"])
+    @app.route('/categories', methods=['GET'])
     def available_categories():
       try:
         return jsonify({
@@ -48,7 +48,7 @@ def create_app(test_config=None):
           'success':'true'
         })
       except:
-        abort(422)
+        abort(400)
 
     '''
     @TODO: 
@@ -85,7 +85,7 @@ def create_app(test_config=None):
             'success': True
         })
       except:
-        abort(422)
+        abort(400)
       
     '''
     @TODO: 
@@ -94,6 +94,16 @@ def create_app(test_config=None):
     TEST: When you click the trash icon next to a question, the question will be removed.
     This removal will persist in the database and when you refresh the page. 
     '''
+    @app.route('/questions/<id>',methods=['DELETE'])
+    def delete_question(id):
+      try:
+          Question.query.get(id).delete()
+          return jsonify({
+              'deleted': id,
+              'success': True,
+          })
+      except:
+          abort(422)
 
     '''
     @TODO: 
