@@ -63,6 +63,30 @@ def create_app(test_config=None):
     Clicking on the page numbers should update the questions. 
     '''
 
+
+    def pagination(page, available_questions):
+      start = (page - 1) * 10
+      end = (page + 1) * 10
+      questions = [question.format() for question in available_questions]
+      current_questions = questions[start:end]
+      return current_questions
+
+    @app.route('/questions')
+    def available_questions():
+      try:
+        page = request.args.get('page', 1, type=int)
+        available_questions = Question.query.order_by(Question.id).all()
+        current_questions = pagination(page, available_questions)
+        return jsonify({
+            'questions': current_questions,
+            'total_questions': len(available_questions),
+            'categories': {category.id: category.type for category in Category.query.order_by(Category.type).all()},
+            'current_category': None,
+            'success': True
+        })
+      except:
+        abort(422)
+      
     '''
     @TODO: 
     Create an endpoint to DELETE question using a question ID. 
@@ -123,25 +147,25 @@ def create_app(test_config=None):
     @app.errorhandler(404)
     def not_found(error):
         return jsonify({
-            "success": False,
             "error": 404,
-            "message": "resource not found"
+            "message": "resource not found",
+            "success": False,
         }), 404
 
     @app.errorhandler(422)
     def unprocessable(error):
         return jsonify({
-            "success": False,
             "error": 422,
-            "message": "unprocessable"
+            "message": "unprocessable",
+            "success": False,
         }), 422
 
     @app.errorhandler(400)
     def bad_request(error):
       return jsonify({
-        "success": False,
         "error": 400,
-        "message": "bad request"
+        "message": "bad request",
+        "success": False,
       }), 400
     return app
 
