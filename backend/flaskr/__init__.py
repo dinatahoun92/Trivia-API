@@ -187,7 +187,7 @@ def create_app(test_config=None):
     one question at a time is displayed, the user is allowed to answer
     and shown whether they were correct or not. 
     '''
-    @app.route("/random_quiz", methods=["POST"])
+    @app.route("/random_quiz", methods=['POST','GET'])
     def quiz():
       previous_questions = request.form.getlist("previous_questions")
       category = request.form.get("category")

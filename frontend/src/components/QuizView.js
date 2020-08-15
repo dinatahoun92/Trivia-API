@@ -33,6 +33,18 @@ class QuizView extends Component {
         return;
       },
     });
+    $.ajax({
+      url: `/random_quiz`,
+      type: "GET",
+      success: (result) => {
+        this.setState({ currentQuestion: result });
+        return;
+      },
+      error: (error) => {
+        alert("Unable to load question. Please try your request again");
+        return;
+      },
+    });
   }
 
   selectCategory = ({ type, id = 0 }) => {
@@ -66,7 +78,7 @@ class QuizView extends Component {
         this.setState({
           showAnswer: false,
           previousQuestions: previousQuestions,
-          currentQuestion: result.question,
+          currentQuestion: result,
           guess: "",
           forceEnd: result.question ? false : true,
         });
@@ -150,8 +162,8 @@ class QuizView extends Component {
       .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
       .toLowerCase();
     const answerArray = this.state.currentQuestion.answer
-      .toLowerCase()
-      .split(" ");
+      ? this.state.currentQuestion.answer.toLowerCase().split(" ")
+      : "";
     return answerArray.includes(formatGuess);
   };
 
