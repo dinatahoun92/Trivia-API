@@ -6,7 +6,6 @@ import random
 
 from models import setup_db, Question, Category
 
-QUESTIONS_PER_PAGE = 10
 
 def create_app(test_config=None):
     app = Flask(__name__)
@@ -130,8 +129,6 @@ def create_app(test_config=None):
         })
       except:
         abort(422)
-
-     
 
     '''
     @TODO: 
