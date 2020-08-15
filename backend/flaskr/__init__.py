@@ -11,7 +11,7 @@ QUESTIONS_PER_PAGE = 10
 def create_app(test_config=None):
     app = Flask(__name__)
     setup_db(app)
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    CORS(app, resources={"*": {"origins": "*"}})
     '''
     @TODO: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
     '''
@@ -122,10 +122,11 @@ def create_app(test_config=None):
         answer = request.form.get('answer')
         category = request.form.get('category')
         difficulty = request.form.get('difficulty')
-        question = Question(question=question, answer=answer, category=category,difficulty=difficulty)
-        question.insert()
+        new_question = Question(question=question, answer=answer, category=category,difficulty=difficulty)
+        new_question.insert()
         return jsonify({
-            'success': True
+          'success': True,
+          'question':question
         })
       except:
         abort(422)
@@ -151,8 +152,6 @@ def create_app(test_config=None):
           'questions': [question.format() for question in search_results],
           'total_questions': len(search_results),
           'success': True,
-          'current_category': [search_results['category'] for search_results in search_results]
-
         })
       except:
         abort(422)

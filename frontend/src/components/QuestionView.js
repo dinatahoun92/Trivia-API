@@ -88,7 +88,7 @@ class QuestionView extends Component {
       url: `/questions/search`, //TODO: update request URL
       type: "POST",
       dataType: "json",
-      contentType: "application/json",
+      "Content-Type": "multipart/form-data",
       data: { search_term: searchTerm },
       xhrFields: {
         withCredentials: true,
