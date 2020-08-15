@@ -36,8 +36,19 @@ class QuizView extends Component {
     $.ajax({
       url: `/random_quiz`,
       type: "GET",
+      contentType: "multipart/form-data",
+      data: {
+        previous_questions: [],
+      },
+      crossDomain: true,
       success: (result) => {
-        this.setState({ currentQuestion: result });
+        this.setState({
+          showAnswer: false,
+          previousQuestions: [1],
+          currentQuestion: result,
+          guess: "",
+          forceEnd: result.question ? false : true,
+        });
         return;
       },
       error: (error) => {
