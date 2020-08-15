@@ -189,14 +189,17 @@ def create_app(test_config=None):
     '''
     @app.route("/random_quiz", methods=["POST"])
     def quiz():
-      previous_questions = list(request.form.getlist("previous_questions"))
-      category = int(request.form.get("category"))
+      previous_questions = request.form.getlist("previous_questions")
+      category = request.form.get("category")
       if category:
-        get_questions = Question.query.filter((Question.category)==(category))
+        get_questions = Question.query.filter((Question.category)==(category),Question.id.notin_(previous_questions)).all()
       else:
         get_questions = Question.query.filter(Question.id.notin_(previous_questions)).all()
+      print(get_questions)
       questions = list(map(Question.format, get_questions))
-      return jsonify(random.choice(questions))
+      print(random.choice(questions))
+      choosen = random.choice(questions)
+      return jsonify(choosen)
 
 
           
