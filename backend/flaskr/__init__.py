@@ -44,7 +44,7 @@ def create_app(test_config=None):
       try:
         return jsonify({
           'categories': {category.id: category.type for category in Category.query.order_by(Category.type).all()},
-          'success':'true'
+          'success':True
         })
       except:
         abort(400)
@@ -171,6 +171,7 @@ def create_app(test_config=None):
         "questions": [question.format() for question in questions],
         "current_category": id,
         "total_questions": len(questions),
+        "success":True
         })
       except:
         abort(422)
