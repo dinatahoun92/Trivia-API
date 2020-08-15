@@ -162,8 +162,8 @@ def create_app(test_config=None):
     categories in the left column will cause only questions of that 
     category to be shown. 
     '''
-    @app.route('/categories/<int:id>/questions', methods=['GET'])
-    def recieve_questions_category(id):
+    @app.route('/categories/<id>/questions', methods=['GET'])
+    def get_questions_category(id):
       try:
         questions = Question.query.filter(Question.category == str(id)).all()
         return jsonify({
@@ -185,7 +185,21 @@ def create_app(test_config=None):
     one question at a time is displayed, the user is allowed to answer
     and shown whether they were correct or not. 
     '''
+    @app.route("/random_quiz", methods=["POST"])
+    def quiz():
+      try:
+        previous_questions = list(request.form.get("previous_questions"))
+        category = request.form.get("category")
+        if category:
+          get_questions = Question.query.filter((Question.category)==(category),Question.id.notin_(previous_questions)).all()
+        else:
+          get_questions = Question.query.filter(Question.id.notin_(previous_questions)).all()
+        questions = list(map(Question.format, get_questions))
+        return jsonify(random.choice(questions))
+      except:
+        abort(422)
 
+          
     '''
     @TODO: 
     Create error handlers for all expected errors 
