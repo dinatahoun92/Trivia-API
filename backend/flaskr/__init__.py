@@ -150,7 +150,9 @@ def create_app(test_config=None):
         return jsonify({
           'questions': [question.format() for question in search_results],
           'total_questions': len(search_results),
-          'success': True
+          'success': True,
+          'current_category': [search_results['category'] for search_results in search_results]
+
         })
       except:
         abort(422)
@@ -187,17 +189,15 @@ def create_app(test_config=None):
     '''
     @app.route("/random_quiz", methods=["POST"])
     def quiz():
-      try:
-        previous_questions = list(request.form.get("previous_questions"))
-        category = request.form.get("category")
-        if category:
-          get_questions = Question.query.filter((Question.category)==(category),Question.id.notin_(previous_questions)).all()
-        else:
-          get_questions = Question.query.filter(Question.id.notin_(previous_questions)).all()
-        questions = list(map(Question.format, get_questions))
-        return jsonify(random.choice(questions))
-      except:
-        abort(422)
+      previous_questions = list(request.form.getlist("previous_questions"))
+      category = int(request.form.get("category"))
+      if category:
+        get_questions = Question.query.filter((Question.category)==(category))
+      else:
+        get_questions = Question.query.filter(Question.id.notin_(previous_questions)).all()
+      questions = list(map(Question.format, get_questions))
+      return jsonify(random.choice(questions))
+
 
           
     '''
