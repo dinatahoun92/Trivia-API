@@ -64,7 +64,7 @@ class QuizView extends Component {
     $.ajax({
       url: "/random_quiz", //TODO: update request URL
       type: "POST",
-      contentType: "application/json",
+      contentType: "multipart/form-data",
       data: {
         previous_questions: previousQuestions,
         category: parseInt(this.state.quizCategory.id),
