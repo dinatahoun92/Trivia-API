@@ -114,6 +114,7 @@ def create_app(test_config=None):
     the form will clear and the question will appear at the end of the last page
     of the questions list in the "List" tab.  
     '''
+
     @app.route('/questions', methods=['POST'])
     def add_question():
       try:
@@ -150,7 +151,15 @@ def create_app(test_config=None):
     categories in the left column will cause only questions of that 
     category to be shown. 
     '''
-
+    @app.route('/categories/<int:id>/questions', methods=['GET'])
+    def recieve_questions_category(id):
+      questions = Question.query.filter(Question.category == str(id)).all()
+      result = {
+      "questions": [question.format() for question in questions],
+      "current_category": id,
+      "total_questions": len(questions),
+      }
+      return jsonify(result)
 
     '''
     @TODO: 
@@ -171,19 +180,19 @@ def create_app(test_config=None):
     '''
     @app.errorhandler(404)
     def not_found(error):
-        return jsonify({
-            "error": 404,
-            "message": "resource not found",
-            "success": False,
-        }), 404
+      return jsonify({
+          "error": 404,
+          "message": "resource not found",
+          "success": False,
+      })
 
     @app.errorhandler(422)
     def unprocessable(error):
-        return jsonify({
-            "error": 422,
-            "message": "unprocessable",
-            "success": False,
-        }), 422
+      return jsonify({
+        "error": 422,
+        "message": "unprocessable",
+        "success": False,
+      })
 
     @app.errorhandler(400)
     def bad_request(error):
@@ -191,7 +200,7 @@ def create_app(test_config=None):
         "error": 400,
         "message": "bad request",
         "success": False,
-      }), 400
+      })
     return app
 
     
